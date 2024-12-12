@@ -1,0 +1,16 @@
+<h1>Simulation des Coûts</h1>
+<table>
+  <tr>
+    <th>Ingrédient</th>
+    <th>Coût Unitaire (€)</th>
+    <th>Quantité</th>
+    <th>Coût Total (€)</th>
+  </tr>
+  <tr *ngFor="let item of ingredients">
+    <td>{{ item.name }}</td>
+    <td>{{ item.cost }}</td>
+    <td><input type="number" [(ngModel)]="item.quantity" (change)="updateTotal()"></td>
+    <td>{{ item.cost * item.quantity }}</td> <!-- Correction ici -->
+  </tr>
+</table>
+<p>Total : {{ totalCost }} €</p>

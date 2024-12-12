@@ -1,0 +1,8 @@
+<h1>Collaboration</h1>
+<div *ngFor="let comment of comments">
+  <p><strong>{{ comment.user }} :</strong> {{ comment.message }}</p>
+</div>
+
+<input type="text" placeholder="Votre nom" [(ngModel)]="newComment.user">
+<textarea placeholder="Votre message" [(ngModel)]="newComment.message"></textarea>
+<button (click)="addComment()">Ajouter un commentaire</button>

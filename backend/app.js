@@ -6,6 +6,11 @@ const authMiddleware = require('./middlewares/authMiddleware');
 
 app.use(express.json());
 
+// Route de base
+app.get('/api', (req, res) => {
+  res.send({ message: 'API is running' });
+});
+
 // Routes
 app.use('/api/parfums', parfumRoutes);
 app.use('/api/users', userRoutes);

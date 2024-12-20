@@ -1,34 +1,24 @@
-version: '3.8'
+version: '3'
 
 services:
-  backend:
-    build:
-      context: ./backend
+  web:
+    build: .
+    container_name: plm_web
     ports:
-      - "5000:5000"
-    environment:
-      - DATABASE_URL=postgres://user:password@db:5432/parfum_db
-      - JWT_SECRET=supersecretkey
+      - "8081:80"
     depends_on:
       - db
 
   db:
-    image: postgres:13
-    restart: always
+    image: mysql:5.7
+    container_name: plm_db
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: parfum_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: plm
+    ports:
+      - "3306:3306"
     volumes:
-      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
-    ports:
-      - "5432:5432"
-
-
-  frontend:
-    build:
-      context: ./frontend/parfum-plm-frontend
-    ports:
-      - "4200:80"
-    depends_on:
-      - backend
+      - db_data:/var/lib/mysql
+      - ./initdb:/docker-entrypoint-initdb.d
+volumes:
+  db_data:

@@ -87,6 +87,7 @@ $username = htmlspecialchars($_SESSION['username']);
         <a href="manage_users.php">Utilisateurs</a>
         <a href="manage_parfums.php">Parfums</a>
         <a href="manage_roles.php">Rôles</a>
+        <a href="manage_ingredients_global.php">Sous-Produits (BOM)</a>
       </nav>
     <?php endif; ?>
 
@@ -112,7 +113,8 @@ $username = htmlspecialchars($_SESSION['username']);
       <!-- Contenu de la gestion de conformité -->
     </section>
 
-    <!-- "Collaboration" et "connecté en tant que..." retirés -->
+    <!-- Onglet BOM ajouté dans la sidebar admin (manage_ingredients.php) -->
+    
   </div>
 </body>
 </html>

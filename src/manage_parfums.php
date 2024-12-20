@@ -8,20 +8,7 @@ if (!isset($_SESSION['username']) || strpos($_SESSION['role'], 'admin') === fals
 $mysqli = new mysqli("db","root","root","plm");
 
 // Liste des parfums
-$res = $mysqli->query("SELECT id, name, version, lifecycle_stage, team FROM parfums ORDER BY name ASC");
-
-// Création d'un parfum
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_parfum'])) {
-  $p_name = $_POST['name'];
-  $p_desc = $_POST['description'];
-  $p_price = $_POST['price'];
-  $p_team = $_POST['team'];
-  $stmt_p = $mysqli->prepare("INSERT INTO parfums (name, description, price, team, version, lifecycle_stage) VALUES (?,?,?,?,1,'Développement')");
-  $stmt_p->bind_param("ssds", $p_name, $p_desc, $p_price, $p_team);
-  $stmt_p->execute();
-  header("Location: manage_parfums.php");
-  exit();
-}
+$res = $mysqli->query("SELECT id, name, version, lifecycle_stage, team, reference FROM parfums ORDER BY name ASC");
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -29,21 +16,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_parfum'])) {
 <meta charset="UTF-8">
 <title>Gérer Parfums</title>
 <link rel="stylesheet" href="styles.css">
+<style>
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  .header-actions {
+    margin-bottom: 20px;
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+  }
+</style>
 </head>
 <body>
 <div class="container">
-  <h1>Gérer Parfums</h1>
   <div class="header-actions">
     <a href="home.php" class="btn btn-secondary">Retour à l'accueil</a>
+    <a href="create_parfum.php" class="btn">Créer un Nouveau Parfum</a>
   </div>
+  
+  <h1>Gérer Parfums</h1>
 
   <table>
     <thead>
       <tr>
         <th>Nom</th>
         <th>Version</th>
-        <th>Lifecycle</th>
+        <th>Cycle de vie</th>
         <th>Équipe</th>
+        <th>Référence</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -54,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_parfum'])) {
         <td><?php echo htmlspecialchars($pf['version']); ?></td>
         <td><?php echo htmlspecialchars($pf['lifecycle_stage']); ?></td>
         <td><?php echo htmlspecialchars($pf['team']); ?></td>
+        <td><?php echo htmlspecialchars($pf['reference']); ?></td>
         <td class="actions">
           <a href="edit_parfum.php?id=<?php echo $pf['id']; ?>" class="btn-edit">Modifier</a>
           <a href="delete_parfum.php?id=<?php echo $pf['id']; ?>" class="btn-delete" onclick="return confirm('Supprimer ce parfum ?')">Supprimer</a>
@@ -62,31 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_parfum'])) {
       <?php endwhile; ?>
     </tbody>
   </table>
-
-  <h2>Créer un nouveau parfum</h2>
-  <form method="post" style="max-width:400px;">
-    <input type="hidden" name="create_parfum" value="1">
-    <div class="form-group">
-      <label>Nom du parfum</label>
-      <input type="text" name="name" required>
-    </div>
-    <div class="form-group">
-      <label>Description</label>
-      <textarea name="description"></textarea>
-    </div>
-    <div class="form-group">
-      <label>Prix</label>
-      <input type="number" step="0.01" name="price" required>
-    </div>
-    <div class="form-group">
-      <label>Équipe</label>
-      <select name="team">
-        <option value="Equipe1">Equipe1</option>
-        <option value="Equipe2">Equipe2</option>
-      </select>
-    </div>
-    <button type="submit" class="btn">Créer</button>
-  </form>
 </div>
 </body>
 </html>

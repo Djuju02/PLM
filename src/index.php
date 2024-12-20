@@ -67,7 +67,7 @@ $error = isset($_GET['error']) && $_GET['error'] === 'invalid';
 
     .image-section {
       width: 70%;
-      background: url('images/parfum2.jpg') no-repeat center center;
+      background: url('images/parfum.jpg') no-repeat center center;
       background-size: cover;
     }
   </style>

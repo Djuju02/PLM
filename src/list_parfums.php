@@ -7,11 +7,12 @@ if (!isset($_SESSION['username'])) {
 
 $mysqli = new mysqli("db","root","root","plm");
 
-// Déterminer l’équipe et si manager
-$user_roles = explode(',', $_SESSION['role']); // ex: "manager,Equipe1"
+// Déterminer le rôle
+$user_roles = explode(',', $_SESSION['role']); 
 $is_manager = in_array('manager', $user_roles);
+$is_admin = in_array('admin', $user_roles);
+
 $team = null;
-// Trouver l'équipe dans les rôles (Equipe1 ou Equipe2)
 foreach ($user_roles as $r) {
   if (strpos($r, 'Equipe') !== false) {
     $team = $r;
@@ -19,12 +20,24 @@ foreach ($user_roles as $r) {
   }
 }
 
-// Si pas d'équipe trouvée, on peut par défaut ne rien afficher ou afficher tout si admin
-$is_admin = in_array('admin', $user_roles);
+// On peut ajouter une recherche
+$search = $_GET['search'] ?? '';
+$query = "SELECT id, name, description, price, reference FROM parfums";
 
-$query = "SELECT id, name, description, price FROM parfums";
+// Filtrer par équipe si pas admin
+$conditions = [];
 if (!$is_admin && $team) {
-  $query .= " WHERE team='$team'";
+  $conditions[] = "team='$team'";
+}
+
+// Si recherche non vide, filtrer sur name, reference, team
+if (!empty($search)) {
+  $search_esc = $mysqli->real_escape_string($search);
+  $conditions[] = "(name LIKE '%$search_esc%' OR reference LIKE '%$search_esc%' OR team LIKE '%$search_esc%')";
+}
+
+if (!empty($conditions)) {
+  $query .= " WHERE " . implode(" AND ", $conditions);
 }
 
 $result = $mysqli->query($query);
@@ -39,10 +52,18 @@ $result = $mysqli->query($query);
 <body>
 <div class="container">
   <h1>Liste des Parfums</h1>
+
+  <!-- Barre de recherche -->
+  <form method="get" style="margin-bottom:20px;">
+    <input type="text" name="search" placeholder="Rechercher par nom, référence, équipe..." value="<?php echo htmlspecialchars($search); ?>" style="padding:8px; border-radius:5px; border:1px solid #bdc3c7; width:200px;">
+    <button type="submit" class="btn">Rechercher</button>
+  </form>
+
   <table>
     <thead>
       <tr>
         <th>Nom</th>
+        <th>Référence</th>
         <th>Description</th>
         <th>Prix (€)</th>
         <?php if ($is_admin || $is_manager): ?>
@@ -54,6 +75,7 @@ $result = $mysqli->query($query);
       <?php while ($p = $result->fetch_assoc()): ?>
       <tr>
         <td><a href="parfum_detail.php?id=<?php echo $p['id']; ?>"><?php echo htmlspecialchars($p['name']); ?></a></td>
+        <td><?php echo htmlspecialchars($p['reference']); ?></td>
         <td><?php echo htmlspecialchars($p['description']); ?></td>
         <td><?php echo htmlspecialchars($p['price']); ?></td>
         <?php if ($is_admin || $is_manager): ?>

@@ -12,18 +12,15 @@ if (empty($ingredient_id)) {
   exit();
 }
 
-// Rôles
 $user_roles = explode(',', $_SESSION['role']);
 $is_admin = in_array('admin', $user_roles);
 $is_manager = in_array('manager', $user_roles);
 
 if (!$is_admin && !$is_manager) {
-  // Pas d'accès
   header("Location: list_parfums.php");
   exit();
 }
 
-// Récupérer l'ingrédient
 $stmt = $mysqli->prepare("SELECT parfum_id, name, reference, quantity, unit_price, tva FROM ingredients WHERE id=?");
 $stmt->bind_param("i", $ingredient_id);
 $stmt->execute();
@@ -40,24 +37,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $new_unit_price = $_POST['unit_price'];
   $new_tva = $_POST['tva'];
 
-  // Comparer anciennes et nouvelles valeurs pour enregistrer dans ingredient_changes
-  $user_id = $_SESSION['user_id']; 
+  $user_id = $_SESSION['user_id'];
 
-  // ex: changement sur quantity
+  // Changement quantity
   if ($new_quantity != $quantity) {
     $stmt_chg = $mysqli->prepare("INSERT INTO ingredient_changes (ingredient_id, user_id, field_changed, old_value, new_value) VALUES (?,?,?,?,?)");
     $stmt_chg->bind_param("iisss", $ingredient_id, $user_id, $field = 'quantity', $old = (string)$quantity, $new = (string)$new_quantity);
     $stmt_chg->execute();
   }
 
-  // idem pour unit_price
+  // Changement unit_price
   if ($new_unit_price != $unit_price) {
     $stmt_chg = $mysqli->prepare("INSERT INTO ingredient_changes (ingredient_id, user_id, field_changed, old_value, new_value) VALUES (?,?,?,?,?)");
     $stmt_chg->bind_param("iisss", $ingredient_id, $user_id, $field = 'unit_price', $old = (string)$unit_price, $new = (string)$new_unit_price);
     $stmt_chg->execute();
   }
 
-  // idem pour tva
+  // Changement tva
   if ($new_tva != $tva) {
     $stmt_chg = $mysqli->prepare("INSERT INTO ingredient_changes (ingredient_id, user_id, field_changed, old_value, new_value) VALUES (?,?,?,?,?)");
     $stmt_chg->bind_param("iisss", $ingredient_id, $user_id, $field = 'tva', $old = (string)$tva, $new = (string)$new_tva);

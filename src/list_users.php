@@ -21,7 +21,6 @@ foreach ($user_roles as $r) {
 
 $query = "SELECT id, username, role FROM users";
 if (!$is_admin && $team) {
-  // Montrer que les users de la même équipe
   $query .= " WHERE role LIKE '%$team%'";
 }
 
@@ -52,17 +51,24 @@ $result = $mysqli->query($query);
       <tr>
         <td><?php echo htmlspecialchars($u['username']); ?></td>
         <td><?php echo htmlspecialchars($u['role']); ?></td>
-        <?php if (($is_admin || $is_manager) && $team && strpos($u['role'], $team) !== false && $u['username'] !== 'admin'): ?>
-          <td class="actions">
-            <a href="edit_user.php?id=<?php echo $u['id']; ?>" class="btn-edit">Modifier</a>
-            <a href="delete_user.php?id=<?php echo $u['id']; ?>" class="btn-delete" onclick="return confirm('Supprimer cet utilisateur ?')">Supprimer</a>
-          </td>
-        <?php elseif($is_admin && $u['username'] !== 'admin'): // Admin peut tout modifier ?>
-          <td class="actions">
-            <a href="edit_user.php?id=<?php echo $u['id']; ?>" class="btn-edit">Modifier</a>
-            <a href="delete_user.php?id=<?php echo $u['id']; ?>" class="btn-delete" onclick="return confirm('Supprimer cet utilisateur ?')">Supprimer</a>
-          </td>
-        <?php endif; ?>
+        <?php 
+        // Conditions pour actions
+        // Si admin, peut modifier tout le monde sauf admin lui-même
+        // Si manager, peut modifier ceux de sa team
+        if ($is_admin && $u['username'] !== 'admin') {
+          echo '<td class="actions">
+                  <a href="edit_user.php?id='.$u['id'].'" class="btn-edit">Modifier</a>
+                  <a href="delete_user.php?id='.$u['id'].'" class="btn-delete" onclick="return confirm(\'Supprimer cet utilisateur ?\')">Supprimer</a>
+                </td>';
+        } elseif ($is_manager && $team && strpos($u['role'], $team) !== false && $u['username'] !== 'admin') {
+          echo '<td class="actions">
+                  <a href="edit_user.php?id='.$u['id'].'" class="btn-edit">Modifier</a>
+                  <a href="delete_user.php?id='.$u['id'].'" class="btn-delete" onclick="return confirm(\'Supprimer cet utilisateur ?\')">Supprimer</a>
+                </td>';
+        } elseif (($is_manager || $is_admin) && $u['username'] === 'admin') {
+          // Aucun droit sur admin
+          // Pas de cellule action
+        } ?>
       </tr>
       <?php endwhile; ?>
     </tbody>

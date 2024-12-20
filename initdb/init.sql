@@ -23,9 +23,7 @@ VALUES ('admin', SHA2('admin', 256), 'admin'),
        ('User2', SHA2('mdp',256), 'Equipe2');
 
 -- TABLE PARFUMS (Produits)
--- Ajout d'un champ version pour suivre les itérations du produit
--- Ajout d'un champ lifecycle_stage pour l'étape du cycle de vie (ex: Développement, Production, Obsolète)
--- Ajout d'un champ team pour rattacher le produit à une équipe
+-- Ajout de version, lifecycle_stage, team, et reference
 CREATE TABLE IF NOT EXISTS parfums (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
@@ -33,12 +31,11 @@ CREATE TABLE IF NOT EXISTS parfums (
   price DECIMAL(10,2) NOT NULL DEFAULT 0,
   team VARCHAR(50) DEFAULT 'Equipe1',
   version INT DEFAULT 1,
-  lifecycle_stage VARCHAR(50) DEFAULT 'Développement'
+  lifecycle_stage VARCHAR(50) DEFAULT 'Développement',
+  reference VARCHAR(100) UNIQUE
 );
 
--- TABLE INGREDIENTS (BOM : Bill of Materials)
--- Ajout de quantity pour la quantité requise de l’ingrédient par unité de parfum
--- unit_price, tva déjà mentionnés
+-- TABLE INGREDIENTS (BOM)
 CREATE TABLE IF NOT EXISTS ingredients (
   id INT AUTO_INCREMENT PRIMARY KEY,
   parfum_id INT NOT NULL,
@@ -50,8 +47,7 @@ CREATE TABLE IF NOT EXISTS ingredients (
   FOREIGN KEY (parfum_id) REFERENCES parfums(id) ON DELETE CASCADE
 );
 
--- TABLE POUR L’HISTORIQUE DES CHANGEMENTS SUR LES INGREDIENTS
--- On stocke quel ingrédient a été modifié, par quel utilisateur, quand, et quelles valeurs ont changé
+-- TABLE POUR L'HISTORIQUE DES MODIFICATIONS SUR LES INGREDIENTS
 CREATE TABLE IF NOT EXISTS ingredient_changes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   ingredient_id INT NOT NULL,
@@ -64,7 +60,7 @@ CREATE TABLE IF NOT EXISTS ingredient_changes (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- TABLE POUR LES COMMENTAIRES (HISTORIQUE DES MESSAGES)
+-- TABLE POUR LES COMMENTAIRES
 CREATE TABLE IF NOT EXISTS comments (
   id INT AUTO_INCREMENT PRIMARY KEY,
   parfum_id INT NOT NULL,
@@ -75,8 +71,7 @@ CREATE TABLE IF NOT EXISTS comments (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- TABLE POUR SUIVRE LA PRODUCTION (LOTS DE PRODUCTION)
--- Permet d’enregistrer des "runs" de production, avec quantité, date, qui a fait la saisie
+-- TABLE POUR SUIVRE LA PRODUCTION
 CREATE TABLE IF NOT EXISTS production_runs (
   id INT AUTO_INCREMENT PRIMARY KEY,
   parfum_id INT NOT NULL,
@@ -87,13 +82,21 @@ CREATE TABLE IF NOT EXISTS production_runs (
   FOREIGN KEY (recorded_by) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- INSERER DES PARFUMS DE BASE
--- Parfum Lavande -> Equipe1, Parfum Rose -> Equipe2
-INSERT IGNORE INTO parfums (name, description, price, team, version, lifecycle_stage)
-VALUES ('Parfum Lavande', 'Un parfum frais et apaisant avec des notes de lavande.', 25.00, 'Equipe1', 1, 'Production'),
-       ('Parfum Rose', 'Un parfum doux et romantique aux notes de rose.', 30.00, 'Equipe2', 1, 'Production');
+CREATE TABLE IF NOT EXISTS ingredients_global (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  reference VARCHAR(100) NOT NULL UNIQUE,
+  default_unit_price DECIMAL(10,2) DEFAULT 5.00,
+  default_tva DECIMAL(4,2) DEFAULT 20.00
+);
 
--- INGREDIENTS DE BASE AVEC PRIX ET TVA
+
+-- INSERER DES PARFUMS DE BASE
+INSERT IGNORE INTO parfums (name, description, price, team, version, lifecycle_stage, reference)
+VALUES ('Parfum Lavande', 'Un parfum frais et apaisant avec des notes de lavande.', 25.00, 'Equipe1', 1, 'Production', 'PAR-LAV-001'),
+       ('Parfum Rose', 'Un parfum doux et romantique aux notes de rose.', 30.00, 'Equipe2', 1, 'Production', 'PAR-ROS-001');
+
+-- INGREDIENTS DE BASE
 INSERT IGNORE INTO ingredients (parfum_id, name, reference, quantity, unit_price, tva)
 VALUES 
 (1, 'Essence de Lavande', 'LAV-001', 1.00, 5.00, 20.00),

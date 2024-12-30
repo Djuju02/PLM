@@ -98,7 +98,7 @@ $res_global = $mysqli->query("
           <a href="edit_ingredient_global.php?id=<?php echo $g['id']; ?>" class="btn-edit">
             Modifier
           </a>
-          <a href="delete_ingredient_global.php?id=<?php echo $g['id']; ?>" class="btn-delete"
+          <a href="delete_ingredient.php?id=<?php echo $g['id']; ?>" class="btn-delete"
              onclick="return confirm('Supprimer cet ingrédient ?');">
             Supprimer
           </a>

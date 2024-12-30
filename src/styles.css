@@ -1,284 +1,424 @@
-/* Reset de base et box-sizing */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* ==============================
+   RESET & BASE
+   ============================== */
+   * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    font-family: Arial, sans-serif;
+    background: #ecf0f1;
+    color: #2c3e50;
+    min-height: 100vh;
+  }
+  
+  /* ==============================
+     LAYOUT GÉNÉRAL
+     ============================== */
+  body {
+    display: flex; /* Permet d’avoir la sidebar à gauche et la main-content à droite */
+  }
+  
+  /* ==============================
+     SIDEBAR
+     ============================== */
+  .sidebar {
+    width: 250px;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 20px;
+    flex-shrink: 0;
+  }
+  .sidebar h2 {
+    margin-bottom: 20px;
+    font-size: 22px;
+    color: #ecf0f1;
+  }
+  .sidebar nav a {
+    display: block;
+    color: #ecf0f1;
+    text-decoration: none;
+    margin: 10px 0;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background 0.3s;
+  }
+  .sidebar nav a:hover {
+    background-color: #34495e;
+    text-decoration: none;
+  }
+  
+  /* ==============================
+     MAIN CONTENT
+     ============================== */
+  .main-content {
+    flex: 1;
+    padding: 20px 30px;
+    background-color: #ecf0f1;
+    overflow-x: hidden;
+  }
+  h1, h2, h3 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+  }
+  
+  /* ==============================
+     TABLES
+     ============================== */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: #fff;
+  }
+  table, th, td {
+    border: 1px solid #bdc3c7;
+  }
+  table th {
+    background: #3498db;
+    color: #fff;
+    padding: 12px;
+    text-align: left;
+  }
+  table td {
+    padding: 12px;
+    border-bottom: 1px solid #bdc3c7;
+  }
+  table tr:hover td {
+    background: #f5f5f5;
+  }
+  
+  /* ==============================
+     CONTAINER (SANS SIDEBAR)
+     ============================== */
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  /* ==============================
+     BOUTONS
+     ============================== */
+  .btn {
+    display: inline-block;
+    padding: 10px 15px;
+    background: #3498db;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    font-size: 14px;
+    transition: background 0.3s;
+  }
+  .btn:hover {
+    background: #2980b9;
+  }
+  .btn-secondary {
+    background: #7f8c8d;
+  }
+  .btn-secondary:hover {
+    background: #707b7c;
+  }
+  .btn-success {
+    background: #2ecc71;
+  }
+  .btn-success:hover {
+    background: #27ae60;
+  }
+  .btn-warning {
+    background: #f39c12;
+  }
+  .btn-warning:hover {
+    background: #d9860f;
+  }
+  .btn-delete {
+    background: #e74c3c;
+  }
+  .btn-delete:hover {
+    background: #c0392b;
+  }
+  
+  /* ==============================
+     LIENS
+     ============================== */
+  a {
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  a:hover {
+    color: #2980b9;
+  }
+  
+  /* ==============================
+     FORMULAIRES GÉNÉRAUX
+     ============================== */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #2c3e50;
+    font-weight: bold;
+  }
+  .form-group input, 
+  .form-group select, 
+  .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #2c3e50;
+  }
+  
+  /* ==============================
+     ACTIONS (MODIFIER, SUPPRIMER)
+     ============================== */
+  .btn-edit {
+    background: #3498db;
+    color: #fff !important;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background 0.3s;
+    margin-right: 5px;
+  }
+  .btn-edit:hover {
+    background: #2980b9;
+  }
+  .btn-delete {
+    background: #e74c3c;
+    color: #fff !important;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+  
+  /* ==============================
+     HEADER-ACTIONS
+     ============================== */
+  .header-actions {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header-actions .btn {
+    margin: 0;
+  }
+  
+  /* ==============================
+     MULTI-SELECT DROPDOWN
+     ============================== */
+  /* 
+     .multi-select => conteneur principal 
+     .multi-select-placeholder => zone cliquable 
+     .multi-select-content => la liste des options 
+  */
+  .multi-select {
+    position: relative;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    margin-top: 5px;
+    cursor: pointer;
+  }
+  .multi-select-placeholder {
+    padding: 10px;
+    color: #2c3e50;
+  }
+  .multi-select-content {
+    display: none;
+    position: absolute;
+    background: #fff;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 999; 
+    margin-top: 2px;
+  }
+  .multi-select.open .multi-select-content {
+    display: block;
+  }
+  .multi-select-item {
+    padding: 8px;
+    border-bottom: 1px solid #ecf0f1;
+    position: relative;
+  }
+  .multi-select-item:last-child {
+    border-bottom: none;
+  }
+  .multi-select-item label {
+    cursor: pointer;
+    color: #2c3e50;
+    padding-left: 25px; /* Pour laisser la place à la case à cocher custom */
+    position: relative;
+  }
+  .multi-select-item input[type="checkbox"] {
+    display: none; /* on va customiser */
+  }
+  
+  /* Case à cocher custom : on peut dessiner un petit carré 
+     et changer la couleur si c'est coché, via ::before / :checked:before 
+  */
+  .multi-select-item input[type="checkbox"] + label::before {
+    content: "";
+    display: inline-block;
+    width: 16px; 
+    height: 16px;
+    border: 2px solid #bdc3c7;
+    border-radius: 3px;
+    position: absolute;
+    left: 0;
+    top: 2px;
+    background: #fff;
+  }
+  .multi-select-item input[type="checkbox"]:checked + label::before {
+    background: #3498db;
+    border-color: #3498db;
+  }
+  
+  /* Survol d’un item */
+  .multi-select-item:hover {
+    background: #ecf0f1;
+  }
+  
+  /* Pour gérer le label “hover”, 
+     on peut aussi colorer le ::before 
+  */
+  
+  /* Pour un effet "checked" plus visible : on peut dessiner 
+     un petit checkmark si besoin, ex. en ::after 
+  */
+  
+  /* SURLIGNAGE du placeholder au hover ou open */
+  .multi-select:hover .multi-select-placeholder {
+    background: #f5f5f5;
+  }
+  .multi-select.open .multi-select-placeholder {
+    background: #dfe6e8;
+  }
+  
+  /* Optionnel : quand on clique à l’extérieur, on referme => géré en JS 
+  */
+  
+  /* ==============================
+    PILL-GROUP CHECKBOXES
+    ============================== */
+
+  /* Le conteneur */
+  .pills-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* 
+    On masque la checkbox native, 
+    on affichera un style custom sur le label 
+  */
+  .pills-group input[type="checkbox"] {
+    display: none;
+  }
+
+  /* Label = apparence de "pill" (bulle) */
+  .pills-group label {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 20px;
+    background: #ecf0f1;
+    color: #2c3e50;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* Quand la checkbox est cochée => label devient bleu */
+  .pills-group input[type="checkbox"]:checked + label {
+    background: #3498db;
+    color: #fff;
+  }
+
+  /* Effet hover en gris */
+  .pills-group label:hover {
+    background: #dfe4e5;
+  }
+  .pills-group input[type="checkbox"]:checked + label:hover {
+    background: #2980b9; 
+  }
+
+  /* Bouton 'Retour Accueil' qui ressemble à un vrai bouton */
+.header-actions button.btn-secondary {
+  cursor: pointer;
+  border: none;
+  outline: none;
 }
 
-/* Mise en page globale */
-body {
-  font-family: Arial, sans-serif;
+/* On enveloppe la zone Equipes, Statuts, Sous-Produits dans un fieldset */
+.category-box {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin-top: 5px;
+}
+.category-box legend {
+  font-weight: bold;
+  font-size: 14px;
+  color: #2c3e50;
+  padding: 0 5px;
+  margin-bottom: 0;
+}
+
+/* Pour aligner le bouton "Tout cocher" à droite ou sous la grille */
+.category-actions {
+  margin-top: 10px;
+  text-align: right; /* ou left/center selon vos goûts */
+}
+
+/* Grille pour les pills */
+.pills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* On cache la checkbox, on stylise le label */
+.pills-grid input[type="checkbox"] {
+  display: none;
+}
+.pills-grid label {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 20px;
   background: #ecf0f1;
   color: #2c3e50;
-  display: flex; /* Sidebar et main-content côte à côte */
-  min-height: 100vh; /* pour occuper tout l'écran */
-}
-
-/* Sidebar */
-.sidebar {
-  width: 250px;
-  background-color: #2c3e50;
-  color: #ecf0f1;
-  padding: 20px;
-}
-
-.sidebar h2 {
-  margin-bottom: 20px;
-}
-
-#parfum-list {
-  list-style: none;
-  padding: 0;
-}
-
-#parfum-list li {
   cursor: pointer;
-  padding: 10px;
-  color: #ecf0f1;
+  transition: background 0.3s, color 0.3s;
+  text-align: center;
 }
-
-#parfum-list li:hover {
-  background-color: #34495e;
-}
-
-.sidebar nav a {
-  display: block;
-  color: #ecf0f1;
-  text-decoration: none;
-  margin: 10px 0;
-  font-size: 18px;
-  padding: 10px;
-  border-radius: 5px;
-  transition: background 0.3s;
-}
-
-.sidebar nav a:hover {
-  background-color: #34495e;
-  text-decoration: none;
-}
-
-/* Contenu principal */
-.main-content {
-  flex: 1;
-  padding: 20px;
-  background-color: #ecf0f1;
-}
-
-/* Titres et sections */
-header h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-section {
-  margin-top: 20px;
-}
-
-h1, h2, h3 {
-  margin-bottom: 20px;
-  color: #2c3e50;
-}
-
-/* Tableaux */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-  background: #fff;
-}
-
-table, th, td {
-  border: 1px solid #bdc3c7;
-}
-
-table th {
+/* Quand c’est coché => label bleu */
+.pills-grid input[type="checkbox"]:checked + label {
   background: #3498db;
   color: #fff;
-  padding: 12px;
-  text-align: left;
 }
-
-table td {
-  padding: 12px;
-  border-bottom: 1px solid #bdc3c7;
+/* Hover */
+.pills-grid label:hover {
+  background: #dfe4e5;
 }
-
-table tr:hover td {
-  background: #f5f5f5;
-}
-
-/* Alertes conformité */
-.compliance-alert {
-  background-color: #e74c3c;
-  color: #fff;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 8px;
-}
-
-/* Section commentaires */
-.comments-section {
-  background-color: #f0f0f0;
-  padding: 10px;
-  border-radius: 8px;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.comment {
-  margin: 10px 0;
-  padding: 10px;
-  background-color: #ecf0f1;
-  border-left: 3px solid #3498db;
-}
-
-/* Formulaire de commentaires */
-#commentForm {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-}
-
-#commentForm input, #commentForm textarea {
-  margin-bottom: 10px;
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #bdc3c7;
-}
-
-#commentForm button {
-  padding: 10px;
-  background-color: #3498db;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-#commentForm button:hover {
-  background-color: #2980b9;
-}
-
-/* Coûts */
-#cost-summary {
-  margin-top: 20px;
-  font-size: 20px;
-  color: #2c3e50;
-}
-
-/* Conteneur central (pour certaines pages sans sidebar) */
-.container {
-  width: 90%;
-  max-width: 1200px;
-  margin: 40px auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-.main-content {
-  padding: 30px;
-}
-
-/* Boutons */
-.btn {
-  display: inline-block;
-  padding: 10px 15px;
-  background: #3498db;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 5px;
-  margin-right: 10px;
-  font-size: 14px;
-  transition: background 0.3s;
-}
-.btn:hover {
+.pills-grid input[type="checkbox"]:checked + label:hover {
   background: #2980b9;
-}
-
-.btn-secondary {
-  background: #7f8c8d;
-}
-.btn-secondary:hover {
-  background: #707b7c;
-}
-
-/* Liens */
-a {
-  color: #3498db;
-  text-decoration: none;
-  transition: color 0.3s;
-}
-a:hover {
-  color: #2980b9;
-}
-
-/* Formulaires généraux */
-.form-group {
-  margin-bottom: 15px;
-}
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  color: #2c3e50;
-  font-weight: bold;
-}
-.form-group input, .form-group select, .form-group textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #bdc3c7;
-  border-radius: 5px;
-  font-size: 14px;
-}
-
-/* Actions dans les tableaux (Modifier, Supprimer) */
-.actions a {
-  margin-right: 10px;
-  color: #3498db;
-  font-weight: bold;
-}
-
-/* Header-actions pour aligner les boutons de création et le retour accueil */
-.header-actions {
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.header-actions .btn {
-  margin: 0;
-}
-
-.btn-edit {
-  background: #3498db;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  text-decoration: none;
-  transition: background 0.3s;
-  margin-right: 5px;
-}
-
-.btn-edit:hover {
-  background: #2980b9;
-}
-
-.btn-delete {
-  background: #e74c3c;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  text-decoration: none;
-  transition: background 0.3s;
-}
-
-.btn-delete:hover {
-  background: #c0392b;
-}
-
-.btn-edit,
-.btn-delete {
-  color: #fff !important;
-  font-weight: bold;
 }

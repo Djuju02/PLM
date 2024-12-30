@@ -30,15 +30,20 @@ $result_roles = $mysqli->query("SELECT id, role_name FROM roles ORDER BY role_na
     justify-content: space-between;
     align-items: center;
   }
+  /* Responsiveness : actions en colonne sur petit écran */
+  @media (max-width: 600px) {
+    .actions a {
+      display: block;
+      margin-bottom: 5px;
+    }
+  }
 </style>
 </head>
 <body>
 <div class="container">
   <h1>Gérer les Rôles</h1>
-  <!-- On place le bouton retour à l'accueil à gauche et la création à droite -->
   <div class="header-actions">
     <a href="home.php" class="btn btn-secondary">Retour à l'accueil</a>
-    <!-- Pas de création massive, mais un formulaire en bas pour créer -->
   </div>
 
   <table>
@@ -56,10 +61,9 @@ $result_roles = $mysqli->query("SELECT id, role_name FROM roles ORDER BY role_na
           <td><?php echo htmlspecialchars($r['role_name']); ?></td>
           <td class="actions">
             <?php if ($r['role_name'] !== 'admin'): ?>
-              <a href="edit_role.php?id=<?php echo $r['id']; ?>">Modifier</a>
-              <a href="delete_role.php?id=<?php echo $r['id']; ?>" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</a>
+              <a href="edit_role.php?id=<?php echo $r['id']; ?>" class="btn-edit" style="margin-right:10px;">Modifier</a>
+              <a href="delete_role.php?id=<?php echo $r['id']; ?>" class="btn-delete" onclick="return confirm('Êtes-vous sûr ?')">Supprimer</a>
             <?php else: ?>
-              <!-- Le rôle admin n'est ni modifiable ni supprimable -->
               <span style="color: #7f8c8d;">Impossible de modifier ou supprimer admin</span>
             <?php endif; ?>
           </td>
